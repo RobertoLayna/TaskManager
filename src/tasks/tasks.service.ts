@@ -5,6 +5,8 @@ import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Shared } from './entities/shared.entity';
+import { Comment } from './entities/comment.entity';
+import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Injectable()
 export class TasksService {
@@ -13,6 +15,8 @@ export class TasksService {
     private taskRepository: Repository<Task>,
     @InjectRepository(Shared)
     private sharedRepository: Repository<Shared>,
+    @InjectRepository(Comment)
+    private commentRepository: Repository<Comment>,
   ) {}
 
   create(createTaskDto: CreateTaskDto) {
@@ -38,7 +42,13 @@ export class TasksService {
   findOne(id: number) {
     return this.taskRepository.findOne({
       where: { id: id },
-      relations: { owner: true, responsible: true, status: true },
+      relations: {
+        owner: true,
+        responsible: true,
+        status: true,
+        comments: true,
+        shareds: true,
+      },
     });
   }
 
@@ -48,5 +58,9 @@ export class TasksService {
 
   remove(id: number) {
     return this.taskRepository.delete({ id: id });
+  }
+
+  createComment(comment: CreateCommentDto) {
+    return this.commentRepository.save(comment);
   }
 }

@@ -12,6 +12,7 @@ import { Tag } from './tasks/entities/tag.entity';
 import { File } from './tasks/entities/file.entity';
 import { Shared } from './tasks/entities/shared.entity';
 import { Bitacora } from './tasks/entities/bitacora.entity';
+import { Comment } from './tasks/entities/comment.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { Bitacora } from './tasks/entities/bitacora.entity';
       username: 'root',
       password: '',
       database: 'task_manager',
-      entities: [User, Task, File, Status, Tag, Shared, Bitacora],
+      entities: [User, Task, File, Status, Tag, Shared, Bitacora, Comment],
       synchronize: true,
     }),
     UsersModule,

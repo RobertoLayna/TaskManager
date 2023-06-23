@@ -8,10 +8,12 @@ import {
   Delete,
   Query,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -62,5 +64,46 @@ export class TasksController {
       status: 'Success',
       updated: deleteResult.affected,
     };
+  }
+
+  @Put(':id/comment')
+  async createComment(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    createCommentDto.id_task = id;
+    const insertResult = await this.tasksService.createComment(
+      createCommentDto,
+    );
+    return {
+      status: 'Success',
+      message: 'Comment is created',
+      id: insertResult.id,
+    };
+  }
+
+  @Put(':id/assign')
+  async assign(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('idOwner', ParseIntPipe) id_owner: number,
+    @Query('idResponsible', ParseIntPipe) id_responsible: number,
+  ) {
+    const isOwner = await this.tasksService.findOne(id);
+    if (isOwner.id_owner === id_owner) {
+      const updateResult = await this.tasksService.update(id, {
+        id_responsible: id_responsible,
+      });
+      return {
+        status: 'Success',
+        message: 'Responsible is assigned',
+        updated: updateResult.affected,
+      };
+    } else {
+      return {
+        status: 'Fail',
+        message: 'You cannot modify this task',
+        updated: 0,
+      };
+    }
   }
 }

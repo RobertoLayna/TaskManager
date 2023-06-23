@@ -7,9 +7,12 @@ import { Tag } from './entities/tag.entity';
 import { File } from './entities/file.entity';
 import { Shared } from './entities/shared.entity';
 import { Bitacora } from './entities/bitacora.entity';
+import { Comment } from './entities/comment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task, Tag, File, Shared, Bitacora])],
+  imports: [
+    TypeOrmModule.forFeature([Task, Tag, File, Shared, Bitacora, Comment]),
+  ],
   controllers: [TasksController],
   providers: [TasksService],
 })

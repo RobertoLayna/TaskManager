@@ -12,6 +12,7 @@ import {
 import { Tag } from './tag.entity';
 import { File } from './file.entity';
 import { Shared } from './shared.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Task {
@@ -62,4 +63,7 @@ export class Task {
 
   @OneToMany(() => Tag, (tag) => tag.task, { cascade: ['insert', 'remove'] })
   tags?: Tag[];
+
+  @OneToMany(() => Comment, (comment) => comment.task)
+  comments?: Comment[];
 }
