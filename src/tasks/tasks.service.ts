@@ -35,7 +35,12 @@ export class TasksService {
         { id_responsible: idUser },
         { is_private: false },
       ],
-      relations: { status: true, responsible: true, owner: true },
+      relations: {
+        status: true,
+        responsible: true,
+        owner: true,
+        shareds: true,
+      },
     });
   }
 

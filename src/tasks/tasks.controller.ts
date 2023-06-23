@@ -14,6 +14,7 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { find } from 'lodash';
 
 @Controller('tasks')
 export class TasksController {
@@ -89,7 +90,10 @@ export class TasksController {
     @Query('idResponsible', ParseIntPipe) id_responsible: number,
   ) {
     const isOwner = await this.tasksService.findOne(id);
-    if (isOwner.id_owner === id_owner) {
+    if (
+      isOwner.id_owner === id_owner &&
+      find(isOwner.shareds, (v) => v.id_user == id_responsible)
+    ) {
       const updateResult = await this.tasksService.update(id, {
         id_responsible: id_responsible,
       });
@@ -101,7 +105,7 @@ export class TasksController {
     } else {
       return {
         status: 'Fail',
-        message: 'You cannot modify this task',
+        message: 'You cannot modify this task or task is not shared with user',
         updated: 0,
       };
     }
